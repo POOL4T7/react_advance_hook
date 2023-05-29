@@ -26,15 +26,15 @@ const Filter = ({ getBread }) => {
   }, []);
 
   return (
-    <div>
+    <>
       <div className="first">
         <div className="form-group">
-          <label htmlFor="exampleSelect1" className="form-label mt-4">
+          <label htmlFor="selectBreed" className="form-label mt-4">
             Breed
           </label>
           <select
             className="form-select"
-            id="exampleSelect1"
+            id="selectBreed"
             onChange={(e) => getBread(e.target.value)}
           >
             <option value="all" defaultChecked>
@@ -42,7 +42,7 @@ const Filter = ({ getBread }) => {
             </option>
             {breads.map((bread) => {
               return (
-                <option value={bread.name} key={bread.name}>
+                <option value={bread.id} key={bread.id}>
                   {bread.name}
                 </option>
               );
@@ -50,7 +50,7 @@ const Filter = ({ getBread }) => {
           </select>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

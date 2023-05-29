@@ -22,15 +22,16 @@ const Home = () => {
     async function fetchBread() {
       try {
         setLoading(true);
-        const response = await axios.get(
-          "https://api.thecatapi.com/v1/images/search?limit=100",
-          {
-            headers: {
-              "x-api-key":
-                "live_JrcEZoNLwhxRfnZdDN1EuvLi6yGbnmhIFZifDGBgmi8d5MLJsJUCz1pimrONos4n",
-            },
-          }
-        );
+        let url = "https://api.thecatapi.com/v1/images/search?limit=100";
+        if (selectedBread != "all") {
+          url = `https://api.thecatapi.com/v1/images/search?breed_ids=${selectedBread}&limit=100`;
+        }
+        const response = await axios.get(url, {
+          headers: {
+            "x-api-key":
+              "live_JrcEZoNLwhxRfnZdDN1EuvLi6yGbnmhIFZifDGBgmi8d5MLJsJUCz1pimrONos4n",
+          },
+        });
 
         setCats(response.data);
       } catch (e) {
@@ -54,19 +55,9 @@ const Home = () => {
                 className="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12 mb-3 p-2"
                 key={cat.id}
               >
-                <LazyLoad
-                  offset={100}
-                  placeholder={
-                    <div style={{ height: "200px" }}>Loading...</div>
-                  }
-                >
-                  <Link className="card" style={{ width: "18rem" }}>
-                    <img
-                      src={cat.url}
-                      className="card-img-top"
-                      alt="image"
-                      loading="lazy"
-                    />
+                <LazyLoad offset={100} placeholder={<Spinner />}>
+                  <Link className="card">
+                    <img src={cat.url} className="card-img-top" alt="image" />
                   </Link>
                 </LazyLoad>
               </div>

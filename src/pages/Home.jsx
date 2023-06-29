@@ -1,71 +1,38 @@
-import { useState, useEffect, useCallback } from "react";
-import Filter from "../components/Filter";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import Spinner from "../components/Spinner";
-import LazyLoad from "react-lazyload";
+import { useFetch } from "../customHooks/useFetch";
+import CatList from "../components/CatList";
+import { useState } from "react";
 
 const Home = () => {
-  const [selectedBread, setSelectedBread] = useState("all");
-  const [cats, setCats] = useState([]);
-  const [loading, setLoading] = useState(false);
-  console.log("home");
-  const handleCallback = useCallback((bread) => {
-    try {
-      setSelectedBread(bread);
-    } catch (e) {
-      console.log(e.message);
-    }
-  }, []);
-
-  useEffect(() => {
-    async function fetchBread() {
-      try {
-        setLoading(true);
-        let url = "https://api.thecatapi.com/v1/images/search?limit=100";
-        if (selectedBread != "all") {
-          url = `https://api.thecatapi.com/v1/images/search?breed_ids=${selectedBread}&limit=100`;
-        }
-        const response = await axios.get(url, {
-          headers: {
-            "x-api-key":
-              "live_JrcEZoNLwhxRfnZdDN1EuvLi6yGbnmhIFZifDGBgmi8d5MLJsJUCz1pimrONos4n",
-          },
-        });
-
-        setCats(response.data);
-      } catch (e) {
-        console.log(e);
-      }
-      setLoading(false);
-    }
-    fetchBread();
-  }, [selectedBread]);
+  const [breed, setBreed] = useState('')
+  const { data: breads } = useFetch('breeds');
 
   return (
-    <div className="container">
-      <Filter getBread={handleCallback} />
-      <div className="row p-5">
-        {loading ? (
-          <Spinner />
-        ) : (
-          cats.map((cat) => {
-            return (
-              <div
-                className="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12 mb-3 p-2"
-                key={cat.id}
-              >
-                <LazyLoad offset={100} placeholder={<Spinner />}>
-                  <Link className="card">
-                    <img src={cat.url} className="card-img-top" alt="image" />
-                  </Link>
-                </LazyLoad>
-              </div>
-            );
-          })
-        )}
+    <>
+      <div className="first container">
+        <div className="form-group">
+          <label htmlFor="selectBreed" className="form-label mt-4">
+            Breed
+          </label>
+          <select
+            className="form-select"
+            id="selectBreed"
+            onChange={(e) => setBreed(e.target.value)}
+          >
+            <option value="all" defaultChecked>
+              All
+            </option>
+            {breads.map((bread) => {
+              return (
+                <option value={bread.id} key={bread.id}>
+                  {bread.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
       </div>
-    </div>
+      <CatList breed={breed} />
+    </>
   );
 };
 

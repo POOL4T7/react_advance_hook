@@ -1,30 +1,10 @@
-import { useEffect, useState, memo } from "react";
-import axios from "axios";
+import { memo } from "react";
+/**
+ * 
+ * @description not in use
+ */
 
-// eslint-disable-next-line react/prop-types
-const Filter = ({ getBread }) => {
-  const [breads, setBreads] = useState([]);
-  console.log("filter");
-  useEffect(() => {
-    async function fetchBread() {
-      try {
-        const response = await axios.get(
-          "https://api.thecatapi.com/v1/breeds",
-          {
-            headers: {
-              "x-api-key":
-                "live_JrcEZoNLwhxRfnZdDN1EuvLi6yGbnmhIFZifDGBgmi8d5MLJsJUCz1pimrONos4n",
-            },
-          }
-        );
-        setBreads(response.data);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    fetchBread();
-  }, []);
-
+const Filter = ({ getBread, breads }) => {
   return (
     <>
       <div className="first">
